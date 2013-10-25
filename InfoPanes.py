@@ -40,7 +40,7 @@ class DiodePane(VReader):
 
   def getTemperature(self, bus):
     v = self.getadcreading(bus)
-    temp = self.conv
+    temp = v * self.conv
 
     return temp
 
