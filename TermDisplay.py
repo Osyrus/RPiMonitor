@@ -6,9 +6,6 @@ import quick2wire.i2c as i2c
 adc_address1 = 0x68
 adc_address2 = 0x69
 
-varDiv  = 16
-varMult = (2.4705882/varDiv)/1000
-
 #Setup screen
 stdscr = curses.initscr()
 curses.noecho()
@@ -18,6 +15,7 @@ stdscr.nodelay(1)
 
 #Position Stuff
 maxY, maxX = stdscr.getmaxyx()
+w = 30
 X1, Y1 = 2, maxY -2
 X2, Y2 = X1+w, maxY -2
 

@@ -8,7 +8,7 @@ class VReader:
 
     #Voltage conversion stuff
     self.varDiv  = 16
-    self.varMult = (2.4705882/varDiv)/1000
+    self.varMult = (2.4705882/self.varDiv)/1000
 
   def getadcreading(self, bus):
     #Change the ADC chip channel
@@ -36,7 +36,7 @@ class DiodePane(VReader):
     self.conv = 10
     self.idNum = idNum
 
-    self.win = curses.newwin(self.h, self.y, self.posY, self.posX)
+    self.win = curses.newwin(self.h, self.w, self.posY, self.posX)
 
   def getTemperature(self, bus):
     v = self.getadcreading(bus)
