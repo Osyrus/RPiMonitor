@@ -27,7 +27,7 @@ class VReader:
     return v * self.varMult
 
 class DiodePane(VReader):
-  def __init__(self, idNum, (x, y), adc, ch):
+  def __init__(self, idNum, x, y, adc, ch):
     super(DiodePane, self).__init__(adc, ch)
     self.posX = x
     self.posY = y

@@ -22,8 +22,8 @@ X1, Y1 = 2, maxY -2
 X2, Y2 = X1+w, maxY -2
 
 #Create some info panes
-D1Pane = InfoPanes.DiodePane(1, (X1,Y1), adc_address1, 0x98)
-D2Pane = InfoPanes.DiodePane(2, (X1,Y1), adc_address1, 0xB8)
+D1Pane = InfoPanes.DiodePane(1, X1, Y1, adc_address1, 0x98)
+D2Pane = InfoPanes.DiodePane(2, X1, Y1, adc_address1, 0xB8)
 
 #Run the refresh loop
 with i2c.I2CMaster() as bus:
