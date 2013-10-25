@@ -1,5 +1,5 @@
 import curses
-import curses.textpad as textpad
+import InfoPanes
 import time
 import quick2wire.i2c as i2c
 
@@ -9,50 +9,27 @@ adc_address2 = 0x69
 varDiv  = 16
 varMult = (2.4705882/varDiv)/1000
 
+#Setup screen
 stdscr = curses.initscr()
 curses.noecho()
 curses.cbreak()
-
 stdscr.keypad(1)
 stdscr.nodelay(1)
 
+#Position Stuff
 maxY, maxX = stdscr.getmaxyx()
-
-h = 1
-w = 30
-
 X1, Y1 = 2, maxY -2
 X2, Y2 = X1+w, maxY -2
 
-win1 = curses.newwin(h, w, Y1, X1)
-win2 = curses.newwin(h, w, Y2, X2)
+#Create some info panes
+D1Pane = InfoPanes.DiodePane(1, (X1,Y1), adc_address1, 0x98)
+D2Pane = InfoPanes.DiodePane(2, (X1,Y1), adc_address1, 0xB8)
 
-def printDTemp(win, num, v):
-	temp = v * 10
-	win.addstr(0, 0, "D%d Temp: %05.02f deg" % (num, temp), curses.A_BOLD)
-	win.refresh()
-
+#Run the refresh loop
 with i2c.I2CMaster() as bus:
-	def changechannel(address, adcConfig):
-		bus.transaction(i2c.writing_bytes(address, adcConfig))
-
-	def getadcreading(address):
-		h, l, s = bus.transaction(i2c.reading(address,3))[0]
-		while (s & 128):
-			h, l, s = bus.transaction(i2c.reading(address,3))[0]
-
-		v = (h << 8) | l
-
-		if (h > 128):
-			v = ~(0x020000 - v)
-
-		return v * varMult
-
 	while True:
-		changechannel(adc_address1, 0x98)
-		printDTemp(win1, 1, getadcreading(adc_address1))
-		changechannel(adc_address1, 0xB8)
-		printDTemp(win2, 2, getadcreading(adc_address1))
+		D1Pane.update(bus)
+		D2Pane.update(bus)
 		
 		c = stdscr.getch()
 		if c == ord('q'):
@@ -60,6 +37,7 @@ with i2c.I2CMaster() as bus:
 
 		time.sleep(1)
 
+#Clean up the screen and reset to normal
 curses.nocbreak()
 curses.echo()
 stdscr.keypad(0)
