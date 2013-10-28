@@ -2,13 +2,14 @@ import quick2wire.i2c as i2c
 import curses
 
 class VReader:
-  def __init__(self, adc, ch):
+  def __init__(self, adc, ch, Lcal):
     self.adc = adc
     self.ch = ch
 
     #Voltage conversion stuff
     self.varDiv  = 16
     self.varMult = (2.4705882/self.varDiv)/1000
+    self.Lcal = Lcal
 
   def getadcreading(self, bus):
     #Change the ADC chip channel
@@ -24,11 +25,11 @@ class VReader:
     if (h > 128):
       v = ~(0x020000 - v)
 
-    return v * self.varMult
+    return (self.Lcal[0] * self.varMult * v) + self.Lcal[1]
 
 class DiodePane(VReader):
-  def __init__(self, idNum, x, y, adc, ch):
-    super(DiodePane, self).__init__(adc, ch)
+  def __init__(self, idNum, x, y, adc, ch, Lcal = (1, 0)):
+    super(DiodePane, self).__init__(adc, ch, Lcal)
     self.posX = x
     self.posY = y
     self.h = 1
