@@ -26,7 +26,7 @@ class VReader:
     if (h > 128):
       v = ~(0x020000 - v)
 
-    return ((self.varMult * self.conv * v) - self.Lcal[1]) / self.Lcal[0]
+    return ((self.varMult * v * conv) - self.Lcal[1]) / self.Lcal[0]
 
 class DiodePane(VReader):
   def __init__(self, idNum, x, y, adc, ch, Lcal = (1, 0)):
