@@ -17,6 +17,7 @@ D2Cal = (0.9356, 2.51)
 stdscr = curses.initscr()
 curses.noecho()
 curses.cbreak()
+curses.curs_set(0)
 stdscr.keypad(1)
 stdscr.nodelay(1)
 
