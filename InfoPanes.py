@@ -78,9 +78,11 @@ class DiodePane(VReader, Pane):
     self.conv = 10 #100mv per degree conversion
     self.setDim(30, 1) #Definition for this module, width = 30, height = 1
     self.idNum = idNum
+    self.win = None
 
     super(DiodePane, self).__init__(adc, ch, Lcal, self.conv)
 
+  def makeWin(self):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
 
   def update(self, bus):

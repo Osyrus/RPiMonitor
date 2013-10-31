@@ -28,6 +28,7 @@ class PaneManager:
           pane.setPos(self.sizeY - self.linePos, self.spacingX)
           break
 
+    pane.makeWin()
     self.panes.append(pane)
 
   def addPanes(self, panes):
