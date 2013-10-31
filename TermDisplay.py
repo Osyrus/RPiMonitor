@@ -1,5 +1,6 @@
 import curses
 import InfoPanes
+from PaneManager import PaneManager
 import time
 import quick2wire.i2c as i2c
 
@@ -20,6 +21,9 @@ curses.cbreak()
 stdscr.keypad(1)
 stdscr.nodelay(1)
 
+#Create the pane manager
+PM = PaneManager(stdscr)
+
 #Position Stuff
 maxY, maxX = stdscr.getmaxyx()
 w = 30
@@ -29,6 +33,9 @@ X2, Y2 = X1+w, maxY -2
 #Create some info panes
 D1Pane = InfoPanes.DiodePane(1, X1, Y1, adc_address1, D1Ch, D1Cal)
 D2Pane = InfoPanes.DiodePane(2, X2, Y2, adc_address1, D2Ch, D2Cal)
+
+#Add them to the manager
+PM.addPane((D1Pane, D2Pane))
 
 #Run the refresh loop
 with i2c.I2CMaster() as bus:

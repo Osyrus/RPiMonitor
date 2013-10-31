@@ -29,3 +29,11 @@ class PaneManager:
           break
 
     panes.append(pane)
+
+  def addPanes(self, panes):
+    for pane in panes:
+      self.addPane(pane)
+
+  def updateAll(self, bus):
+    for pane in self.panes:
+      pane.update(bus)
