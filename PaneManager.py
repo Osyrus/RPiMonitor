@@ -30,8 +30,8 @@ class PaneManager:
 
     self.panes.append(pane)
 
-  def addPanes(self, tup):
-    for pane in tup:
+  def addPanes(self, panes):
+    for pane in panes:
       self.addPane(pane)
 
   def updateAll(self, bus):
