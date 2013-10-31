@@ -11,24 +11,24 @@ class PaneManager:
     self.spacingY = 1
 
   def addPane(self, pane):
-    if len(panes) == 0:
-      pane.setPos(self.sizeY - linePos, spacingX)
+    if len(self.panes) == 0:
+      pane.setPos(self.sizeY - self.linePos, self.spacingX)
     else:
       while True:
-        if panes[end].getPos()[1] == linePos:
-          usedX = panes[end].getPos()[0] + panes[end].getDim[0] + spacingX
+        if self.panes[end].getPos()[1] == self.linePos:
+          usedX = self.panes[end].getPos()[0] + self.panes[end].getDim[0] + self.spacingX
 
           if (usedX + pane.getPos()[0]) <= self.sizeX:
-            pane.setPos(self.sizeY - linePos, usedX)
+            pane.setPos(self.sizeY - self.linePos, usedX)
             break
           else:
-            linePos = linePos + 1 + spacingY
+            self.linePos = self.linePos + 1 + self.spacingY
 
         else:
-          pane.setPos(self.sizeY - linePos, spacingX)
+          pane.setPos(self.sizeY - self.linePos, self.spacingX)
           break
 
-    panes.append(pane)
+    self.panes.append(pane)
 
   def addPanes(self, panes):
     for pane in panes:
