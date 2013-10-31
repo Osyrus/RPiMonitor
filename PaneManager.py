@@ -15,17 +15,19 @@ class PaneManager:
       pane.setPos(self.sizeY - self.linePos, self.spacingX)
     else:
       while True:
-        if self.panes[-1].getPos()[1] == self.linePos:
+        yPos = self.sizeY - self.linePos
+
+        if self.panes[-1].getPos()[1] == yPos:
           usedX = self.panes[-1].getPos()[0] + self.panes[-1].getDim()[0] + self.spacingX
 
           if (usedX + pane.getPos()[0]) <= self.sizeX:
-            pane.setPos(self.sizeY - self.linePos, usedX)
+            pane.setPos(yPos, usedX)
             break
           else:
             self.linePos = self.linePos + 1 + self.spacingY
-
+            
         else:
-          pane.setPos(self.sizeY - self.linePos, self.spacingX)
+          pane.setPos(yPos, self.spacingX)
           break
 
     pane.makeWin()
