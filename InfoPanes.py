@@ -74,9 +74,8 @@ class DiodePane(VReader, Pane):
   ch    -- The channel of the ADC chip
   Lcal  -- The linear calibration, in the form 'Y = (X - Lcal[1])/Lcal[0]' (default (1,0))
   """
-  def __init__(self, idNum, x, y, adc, ch, Lcal = (1, 0)):
+  def __init__(self, idNum, adc, ch, Lcal = (1, 0)):
     self.conv = 10 #100mv per degree conversion
-    self.setPos(x, y)
     self.setDim(30, 1) #Definition for this module, width = 30, height = 1
     self.idNum = idNum
 

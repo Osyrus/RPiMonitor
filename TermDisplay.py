@@ -24,15 +24,9 @@ stdscr.nodelay(1)
 #Create the pane manager
 PM = PaneManager(stdscr)
 
-#Position Stuff
-maxY, maxX = stdscr.getmaxyx()
-w = 30
-X1, Y1 = 2, maxY -2
-X2, Y2 = X1+w, maxY -2
-
 #Create some info panes
-D1Pane = InfoPanes.DiodePane(1, X1, Y1, adc_address1, D1Ch, D1Cal)
-D2Pane = InfoPanes.DiodePane(2, X2, Y2, adc_address1, D2Ch, D2Cal)
+D1Pane = InfoPanes.DiodePane(1, adc_address1, D1Ch, D1Cal)
+D2Pane = InfoPanes.DiodePane(2, adc_address1, D2Ch, D2Cal)
 
 #Add them to the manager
 PM.addPanes([D1Pane, D2Pane])
