@@ -34,8 +34,7 @@ PM.addPanes([D1Pane, D2Pane])
 #Run the refresh loop
 with i2c.I2CMaster() as bus:
 	while True:
-		D1Pane.update(bus)
-		D2Pane.update(bus)
+		PM.updateAll(bus)
 		
 		c = stdscr.getch()
 		if c == ord('q'):
