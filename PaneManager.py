@@ -15,8 +15,8 @@ class PaneManager:
       pane.setPos(self.sizeY - self.linePos, self.spacingX)
     else:
       while True:
-        if self.panes[end].getPos()[1] == self.linePos:
-          usedX = self.panes[end].getPos()[0] + self.panes[end].getDim[0] + self.spacingX
+        if self.panes[-1].getPos()[1] == self.linePos:
+          usedX = self.panes[-1].getPos()[0] + self.panes[-1].getDim[0] + self.spacingX
 
           if (usedX + pane.getPos()[0]) <= self.sizeX:
             pane.setPos(self.sizeY - self.linePos, usedX)
