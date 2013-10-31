@@ -75,12 +75,10 @@ class DiodePane(VReader, Pane):
   Lcal  -- The linear calibration, in the form 'Y = (X - Lcal[1])/Lcal[0]' (default (1,0))
   """
   def __init__(self, idNum, adc, ch, Lcal = (1, 0)):
-    self.conv = 10 #100mv per degree conversion
-    self.setDim(30, 1) #Definition for this module, width = 30, height = 1
+    VReader.__init__(adc, ch, Lcal, conv = 10) #100mv per degree conversion
+    Pane.__init__(w = 30, h = 1) #Definition for this module, width = 30, height = 1
     self.idNum = idNum
     self.win = None
-
-    super(DiodePane, self).__init__(adc, ch, Lcal, self.conv)
 
   def makeWin(self):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
