@@ -53,7 +53,7 @@ class Pane:
   def getPos(self):
     return (self.x, self.y)
 
-  def setPos(self, x, y):
+  def setPos(self, y, x):
     self.x, self.y = x, y
 
   def getDim(self):
