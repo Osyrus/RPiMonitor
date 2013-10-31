@@ -42,7 +42,28 @@ class VReader:
 
     return ((self.varMult * self.conv * v) - self.Lcal[1]) / self.Lcal[0]
 
-class DiodePane(VReader):
+class Pane:
+  """docstring for Pane"""
+  def __init__(self, x = 1, y = 1, w = 30, h = 1):
+    self.x, self.y = 0, 0
+    self.w, self.h = 0, 0
+    self.setPos(x, y)
+    self.setDim(w, h)
+
+  def getPos(self):
+    return (self.x, self.y)
+
+  def setPos(self, x, y):
+    self.x, self.y = x, y
+
+  def getDim(self):
+    return (self.w, self.h)
+
+  def setDim(self, w, h):
+    self.w, self.h = w, h
+    
+
+class DiodePane(VReader, Pane):
   """Subclass of VReader that creates a curses windows to read diode temperatures
 
   Arguments:
@@ -53,17 +74,15 @@ class DiodePane(VReader):
   ch    -- The channel of the ADC chip
   Lcal  -- The linear calibration, in the form 'Y = (X - Lcal[1])/Lcal[0]' (default (1,0))
   """
-  def __init__(self, idNum, x, y, adc, ch, Lcal = (1, 0)):
+  def __init__(self, idNum, x = 1, y = 1, adc, ch, Lcal = (1, 0)):
     self.conv = 10 #100mv per degree conversion
-    self.posX = x
-    self.posY = y
-    self.h = 1
-    self.w = 30
+    self.setPos(x, y)
+    self.setDim(w, h)
     self.idNum = idNum
 
     super(DiodePane, self).__init__(adc, ch, Lcal, self.conv)
 
-    self.win = curses.newwin(self.h, self.w, self.posY, self.posX)
+    self.win = curses.newwin(self.h, self.w, self.y, self.x)
 
   def update(self, bus):
     """Updates the windows for this diode temperature window instance
