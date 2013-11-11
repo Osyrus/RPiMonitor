@@ -72,7 +72,7 @@ class DiodePane(VReader, Pane):
   y     -- The y location
   adc   -- The I2C ADC chip address
   ch    -- The channel of the ADC chip
-  Lcal  -- The linear calibration, in the form 'Y = (X - Lcal[1])/Lcal[0]' (default (1,0))
+  Lcal  -- The linear calibration, in the form 'X = Lcal[0]*Y + Lcal[1]' (default (1,0))
   """
   def __init__(self, idNum, adc, ch, Lcal = (1, 0)):
     VReader.__init__(self, adc, ch, Lcal, conv = 10) #100mv per degree conversion

@@ -5,14 +5,13 @@ import time
 import quick2wire.i2c as i2c
 
 #I2C Setup Stuff
-adc_address1 = 0x68
-adc_address2 = 0x69
-D1Ch = 0x98
-D2Ch = 0xB8
+ADCAdd =  (0x68, 0x69)
+Ch16 = (0x98, 0xB8 ,0xD8, 0xF8) #16bit Channels
 
 #Calibration Stuff
 D1Cal = (0.9518, 2.238)
 D2Cal = (0.9356, 2.51)
+CurrentCal = (78.42, -0.059)
 
 #Setup screen
 stdscr = curses.initscr()
@@ -25,8 +24,8 @@ stdscr.nodelay(1)
 PM = PaneManager(stdscr)
 
 #Create some info panes
-D1Pane = InfoPanes.DiodePane(1, adc_address1, D1Ch, D1Cal)
-D2Pane = InfoPanes.DiodePane(2, adc_address1, D2Ch, D2Cal)
+D1Pane = InfoPanes.DiodePane(1, ADCAdd[0], Ch16[0], D1Cal)
+D2Pane = InfoPanes.DiodePane(2, ADCAdd[0], Ch16[1], D2Cal)
 
 #Add them to the manager
 PM.addPanes([D1Pane, D2Pane])
