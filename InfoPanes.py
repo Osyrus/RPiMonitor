@@ -76,7 +76,7 @@ class InfoPane(VReader, Pane):
   """
   def __init__(self, idNum, info, adc, ch, LCal = (1, 0)):
     VReader.__init__(self, adc, ch)
-    Pane.__init__(self, w = getLen(info), h = 1)
+    Pane.__init__(self, w = len(info[0]) + len(info[1]) + len(info[2]) + 9, h = 1)
     
     self.idNum = idNum
     self.info = info
@@ -100,6 +100,3 @@ class InfoPane(VReader, Pane):
 
   def applyCal(self, raw):
     return (self.Lcal[0] * raw) - self.Lcal[1]
-
-  def getLen(info):
-    return len(info[0]) + len(info[1]) + len(info[2]) + 9
