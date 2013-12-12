@@ -81,7 +81,7 @@ class InfoPane(VReader, Pane):
     self.idNum = idNum
     self.info = info
     self.win = None
-    self.Lcal = Lcal
+    self.LCal = LCal
 
   def makeWin(self):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
@@ -99,4 +99,4 @@ class InfoPane(VReader, Pane):
     return self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2]
 
   def applyCal(self, raw):
-    return (self.Lcal[0] * raw) - self.Lcal[1]
+    return (self.LCal[0] * raw) - self.LCal[1]
