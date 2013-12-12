@@ -87,7 +87,7 @@ class InfoPane(VReader, Pane):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
 
   def createString(self, data):
-    strOut = self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2]
+    strOut = repr(self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2])
     print strOut
     return strOut
 
