@@ -48,8 +48,8 @@ try:
 
       time.sleep(1)
 
-except Exception, e:
-  raise e
+except:
+  raise
 
 finally:
   #Clean up the screen and reset to normal
