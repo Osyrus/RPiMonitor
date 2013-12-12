@@ -10,15 +10,13 @@ class VReader:
   Lcal -- The linear calibration, in the form 'Y = (X - Lcal[1])/Lcal[0]' (default (1,0)).
   conv -- The linear conversion from voltage, in the form 'Y = conv * X'.
   """
-  def __init__(self, adc, ch, Lcal = (1,0), conv = 1):
+  def __init__(self, adc, ch):
     self.adc = adc
     self.ch = ch
 
     #Voltage conversion stuff
     self.varDiv  = 16
     self.varMult = (2.4705882/self.varDiv)/1000
-    self.Lcal = Lcal
-    self.conv = conv
 
   def getadcreading(self, bus):
     """Returns the voltage reading for this instance after calibration and conversion.
@@ -40,7 +38,7 @@ class VReader:
     if (h > 128):
       v = ~(0x020000 - v)
 
-    return ((self.varMult * self.conv * v) - self.Lcal[1]) / self.Lcal[0]
+    return (self.varMult * v)
 
 class Pane:
   """docstring for Pane"""
@@ -63,22 +61,27 @@ class Pane:
     self.w, self.h = w, h
     
 
-class DiodePane(VReader, Pane):
+class InfoPane(VReader, Pane):
   """Subclass of VReader that creates a curses windows to read diode temperatures
 
   Arguments:
   idNum -- Diode number for identification
+  info  -- A length 3 tuple, for printing to screen.
+           Order: Identifier (e.g. Diode, Driver), Reading (e.g. Temp, Current), Unit (e.g. deg, A, V)
   x     -- The x location
   y     -- The y location
   adc   -- The I2C ADC chip address
   ch    -- The channel of the ADC chip
-  Lcal  -- The linear calibration, in the form 'X = Lcal[0]*Y + Lcal[1]' (default (1,0))
+  Lcal  -- The linear calibration/conversion, in the form 'X = Lcal[0]*Y + Lcal[1]' (default (1,0))
   """
-  def __init__(self, idNum, adc, ch, Lcal = (1, 0)):
-    VReader.__init__(self, adc, ch, Lcal, conv = 10) #100mv per degree conversion
-    Pane.__init__(self, w = 30, h = 1) #Definition for this module, width = 30, height = 1
+  def __init__(self, idNum, info, adc, ch, LCal = (1, 0)):
+    VReader.__init__(self, adc, ch)
+    Pane.__init__(self, w = getLen(info), h = 1)
+    
     self.idNum = idNum
+    self.info = info
     self.win = None
+    self.Lcal = Lcal
 
   def makeWin(self):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
@@ -89,5 +92,14 @@ class DiodePane(VReader, Pane):
     Arguments:
     bus -- The quick2wire bus to use for communication with the ADC chip.
     """
-    self.win.addstr(0, 0, "D%d Temp: %05.02f deg" % (self.idNum, self.getadcreading(bus)), curses.A_BOLD)
+    self.win.addstr(0, 0, createString(applyCal(self.getadcreading(bus))), curses.A_BOLD)
     self.win.refresh()
+
+  def createString(self, data):
+    return self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2]
+
+  def applyCal(self, raw):
+    return (self.Lcal[0] * raw) - self.Lcal[1]
+
+  def getLen(info):
+    return len(info[0]) + len(info[1]) + len(info[2]) + 9

@@ -9,8 +9,8 @@ ADCAdd =  (0x68, 0x69)
 Ch16 = (0x98, 0xB8 ,0xD8, 0xF8) #16bit Channels
 
 #Calibration Stuff
-D1Cal = (0.9518, 2.238)
-D2Cal = (0.9356, 2.51)
+D1Cal = (10.506, 2.351)
+D2Cal = (10.688, 2.683)
 CurrentCal = (78.42, -0.059)
 
 #Setup screen
@@ -23,9 +23,14 @@ stdscr.nodelay(1)
 #Create the pane manager
 PM = PaneManager(stdscr)
 
+#Create info strings
+diodeInfo = ("Diode ", "temp", "deg")
+driverInfo = ("Driver ", "current", "A")
+
 #Create some info panes
-D1Pane = InfoPanes.DiodePane(1, ADCAdd[0], Ch16[0], D1Cal)
-D2Pane = InfoPanes.DiodePane(2, ADCAdd[0], Ch16[1], D2Cal)
+D1Pane = InfoPanes.InfoPane(1, diodeInfo, ADCAdd[0], Ch16[0], D1Cal)
+D2Pane = InfoPanes.InfoPane(2, diodeInfo, ADCAdd[0], Ch16[1], D2Cal)
+DrPane = InfoPanes.InfoPane(1, driverInfo, ADCAdd[1], Ch16[0], CurrentCal)
 
 #Add them to the manager
 PM.addPanes([D1Pane, D2Pane])
