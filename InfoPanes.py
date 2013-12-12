@@ -98,5 +98,5 @@ class InfoPane(VReader, Pane):
     Arguments:
     bus -- The quick2wire bus to use for communication with the ADC chip.
     """
-    self.win.addstr(0, 0, createString(applyCal(self.getadcreading(bus))), curses.A_BOLD)
+    self.win.addstr(0, 0, self.createString(self.applyCal(self.getadcreading(bus))), curses.A_BOLD)
     self.win.refresh()
