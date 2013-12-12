@@ -88,7 +88,6 @@ class InfoPane(VReader, Pane):
 
   def createString(self, data):
     strOut = repr(self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2])
-    print strOut
     return strOut
 
   def applyCal(self, raw):
