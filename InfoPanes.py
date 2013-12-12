@@ -86,6 +86,12 @@ class InfoPane(VReader, Pane):
   def makeWin(self):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
 
+  def createString(self, data):
+    return self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2]
+
+  def applyCal(self, raw):
+    return (self.LCal[0] * raw) - self.LCal[1]
+
   def update(self, bus):
     """Updates the windows for this diode temperature window instance
 
@@ -94,9 +100,3 @@ class InfoPane(VReader, Pane):
     """
     self.win.addstr(0, 0, createString(applyCal(self.getadcreading(bus))), curses.A_BOLD)
     self.win.refresh()
-
-  def createString(self, data):
-    return self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2]
-
-  def applyCal(self, raw):
-    return (self.LCal[0] * raw) - self.LCal[1]
