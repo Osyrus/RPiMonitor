@@ -1,5 +1,6 @@
 import curses
 import InfoPanes
+import exceptions.Exception as Exception
 from PaneManager import PaneManager
 import time
 import quick2wire.i2c as i2c
