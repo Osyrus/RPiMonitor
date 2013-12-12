@@ -76,7 +76,7 @@ class InfoPane(VReader, Pane):
   """
   def __init__(self, idNum, info, adc, ch, LCal = (1, 0)):
     VReader.__init__(self, adc, ch)
-    Pane.__init__(self, w = len(info[0]) + len(info[1]) + len(info[2]) + 9, h = 1)
+    Pane.__init__(self, w = len(info[0]) + len(info[1]) + len(info[2]) + 10, h = 1)
     
     self.idNum = idNum
     self.info = info
