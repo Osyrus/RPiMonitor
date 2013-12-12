@@ -87,7 +87,7 @@ class InfoPane(VReader, Pane):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
 
   def createString(self, data):
-    return repr(self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2])
+    return self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2]
 
   def applyCal(self, raw):
     return (self.LCal[0] * raw) - self.LCal[1]
@@ -98,5 +98,13 @@ class InfoPane(VReader, Pane):
     Arguments:
     bus -- The quick2wire bus to use for communication with the ADC chip.
     """
-    self.win.addstr(0, 0, self.createString(self.applyCal(self.getadcreading(bus))), curses.A_BOLD)
+    #Pull the data from the ADC
+    rawData = self.getadcreading(bus)
+    #Convert the output to the correct units
+    data = self.applyCal(rawData)
+    #Create a user readable string with this data
+    dataStr = self.createString(data)
+    #Print this readable string to the pane
+    self.win.addstr(0, 0, str(dataStr), curses.A_BOLD)
+    #Refresh this pane for the user to read!
     self.win.refresh()
