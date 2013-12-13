@@ -96,7 +96,7 @@ class InfoPane(VReader, Pane):
     return self.info[0] + ("%d " % self.idNum) + self.info[1] + (": %02.02f " % data) + self.info[2]
 
   def applyCal(self, raw):
-    return (self.LCal[0] * raw) - self.LCal[1]
+    return (self.LCal[0] * raw) + self.LCal[1]
 
   def update(self, bus):
     """Updates the windows for this diode temperature window instance
