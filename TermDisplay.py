@@ -11,8 +11,8 @@ try:
   Ch12 = (0x90, 0XB0, 0XD0, 0XF0) #12bit Channels
 
   #Calibration Stuff
-  D1Cal = (10.506, 2.351)
-  D2Cal = (10.688, 2.683)
+  D1Cal = (10.506, -2.351)
+  D2Cal = (10.688, -2.683)
   CurrentCal = (78.42, -0.059)
 
   #Setup screen
