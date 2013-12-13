@@ -59,6 +59,9 @@ class Pane:
 
   def setDim(self, w, h):
     self.w, self.h = w, h
+
+  def setWidthStr(self, inStr):
+    self.w = len(inStr[0]) + len(inStr[1]) + len(inStr[2]) + 15
     
 
 class InfoPane(VReader, Pane):
@@ -76,12 +79,13 @@ class InfoPane(VReader, Pane):
   """
   def __init__(self, idNum, info, adc, ch, LCal = (1, 0)):
     VReader.__init__(self, adc, ch)
-    Pane.__init__(self, w = len(info[0]) + len(info[1]) + len(info[2]) + 10, h = 1)
+    Pane.__init__(self)
     
     self.idNum = idNum
     self.info = info
     self.win = None
     self.LCal = LCal
+    self.setWidthStr(info)
 
   def makeWin(self):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
