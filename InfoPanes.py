@@ -61,7 +61,7 @@ class Pane:
     self.w, self.h = w, h
 
   def setWidthStr(self, inStr):
-    self.w = len(inStr[0]) + len(inStr[1]) + len(inStr[2]) + 15
+    self.w = len(inStr[0]) + len(inStr[1]) + len(inStr[2]) + 13
     
 
 class InfoPane(VReader, Pane):
@@ -76,15 +76,17 @@ class InfoPane(VReader, Pane):
   adc   -- The I2C ADC chip address
   ch    -- The channel of the ADC chip
   Lcal  -- The linear calibration/conversion, in the form 'X = Lcal[0]*Y + Lcal[1]' (default (1,0))
+  avg   -- The number of times to average the reading before displaying
   """
-  def __init__(self, idNum, info, adc, ch, LCal = (1, 0)):
+  def __init__(self, idNum, info, adc, ch, LCal = (1, 0), avg = 1):
     VReader.__init__(self, adc, ch)
     Pane.__init__(self)
-    
+
     self.idNum = idNum
     self.info = info
     self.win = None
     self.LCal = LCal
+    self.avg = avg
     self.setWidthStr(info)
 
   def makeWin(self):
@@ -102,8 +104,14 @@ class InfoPane(VReader, Pane):
     Arguments:
     bus -- The quick2wire bus to use for communication with the ADC chip.
     """
-    #Pull the data from the ADC
-    rawData = self.getadcreading(bus)
+    #Pull the data from the ADC and deal with any averaging
+    if self.avg == 1:
+      rawData = self.getadcreading(bus)
+    else:
+      accum = 0  
+      for i in xrange(1, self.avg):
+        accum = accum + self.getadcreading(bus)
+      rawData = accum / self.avg
     #Convert the output to the correct units
     data = self.applyCal(rawData)
     #Create a user readable string with this data

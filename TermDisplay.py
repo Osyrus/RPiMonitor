@@ -32,7 +32,7 @@ try:
   #Create some info panes
   D1Pane = InfoPanes.InfoPane(1, diodeInfo, ADCAdd[0], Ch16[0], D1Cal)
   D2Pane = InfoPanes.InfoPane(2, diodeInfo, ADCAdd[0], Ch16[1], D2Cal)
-  DrPane = InfoPanes.InfoPane(1, driverInfo, ADCAdd[1], Ch12[0], CurrentCal)
+  DrPane = InfoPanes.InfoPane(1, driverInfo, ADCAdd[1], Ch12[0], CurrentCal, 30)
 
   #Add them to the manager
   PM.addPanes([D1Pane, D2Pane, DrPane])
