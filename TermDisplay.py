@@ -9,6 +9,8 @@ try:
   ADCAdd =  (0x68, 0x69)
   Ch16 = (0x98, 0xB8, 0xD8, 0xF8) #16bit Channels
   Ch12 = (0x90, 0XB0, 0XD0, 0XF0) #12bit Channels
+  Div16 = 16
+  Div12 = 1
 
   #Calibration Stuff
   D1Cal = (10.506, -2.351)
@@ -30,9 +32,9 @@ try:
   driverInfo = ("Driver ", "current", "A")
 
   #Create some info panes
-  D1Pane = InfoPanes.InfoPane(1, diodeInfo, ADCAdd[0], Ch16[0], D1Cal)
-  D2Pane = InfoPanes.InfoPane(2, diodeInfo, ADCAdd[0], Ch16[1], D2Cal)
-  DrPane = InfoPanes.InfoPane(1, driverInfo, ADCAdd[1], Ch12[0], (1000,0))
+  D1Pane = InfoPanes.InfoPane(1, diodeInfo, ADCAdd[0], Ch16[0], Div16, D1Cal)
+  D2Pane = InfoPanes.InfoPane(2, diodeInfo, ADCAdd[0], Ch16[1], Div16, D2Cal)
+  DrPane = InfoPanes.InfoPane(1, driverInfo, ADCAdd[1], Ch12[0], Div12, (1000,0))
 
   #Add them to the manager
   PM.addPanes([D1Pane, D2Pane, DrPane])

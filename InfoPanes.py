@@ -10,12 +10,12 @@ class VReader:
   Lcal -- The linear calibration, in the form 'Y = (X - Lcal[1])/Lcal[0]' (default (1,0)).
   conv -- The linear conversion from voltage, in the form 'Y = conv * X'.
   """
-  def __init__(self, adc, ch):
+  def __init__(self, adc, ch, div):
     self.adc = adc
     self.ch = ch
 
     #Voltage conversion stuff
-    self.varDiv  = 16
+    self.varDiv  = div
     self.varMult = (2.4705882/self.varDiv)/1000
 
   def getadcreading(self, bus):
@@ -78,8 +78,8 @@ class InfoPane(VReader, Pane):
   Lcal  -- The linear calibration/conversion, in the form 'X = Lcal[0]*Y + Lcal[1]' (default (1,0))
   avg   -- The number of times to average the reading before displaying
   """
-  def __init__(self, idNum, info, adc, ch, LCal = (1, 0), avg = 1):
-    VReader.__init__(self, adc, ch)
+  def __init__(self, idNum, info, adc, ch, div, LCal = (1, 0), avg = 1):
+    VReader.__init__(self, adc, ch, div)
     Pane.__init__(self)
 
     self.idNum = idNum
