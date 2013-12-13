@@ -109,7 +109,7 @@ class InfoPane(VReader, Pane):
       rawData = self.getadcreading(bus)
     else:
       accum = 0  
-      for i in xrange(1, self.avg):
+      for i in range(1, self.avg + 1):
         accum = accum + self.getadcreading(bus)
       rawData = accum / self.avg
     #Convert the output to the correct units
