@@ -93,7 +93,7 @@ class InfoPane(VReader, Pane):
     self.win = curses.newwin(self.h, self.w, self.y, self.x)
 
   def createString(self, data):
-    return self.info[0] + "{} ".format(self.idNum) + self.info[1] + ": {0:02.02d} ".format(data) + self.info[2]
+    return self.info[0] + "{} ".format(self.idNum) + self.info[1] + ": {0:02.02f} ".format(data) + self.info[2]
 
   def applyCal(self, raw):
     return (self.LCal[0] * raw) + self.LCal[1]
