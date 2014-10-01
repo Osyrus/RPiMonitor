@@ -6,9 +6,8 @@ class VReader:
 
   Arguments:
   adc  -- The I2C address of the ADC chip.
-  ch   -- The specific channel of the ADC chip.
-  Lcal -- The linear calibration, in the form 'Y = (X - Lcal[1])/Lcal[0]' (default (1,0)).
-  conv -- The linear conversion from voltage, in the form 'Y = conv * X'.
+  ch   -- The specific channel of the ADC chip (also sets the number of read bits).
+  div  -- The divisor for voltage conversion (depends on number of bits)
   """
   def __init__(self, adc, ch, div):
     self.adc = adc
@@ -19,7 +18,7 @@ class VReader:
     self.varMult = (2.4705882/self.varDiv)/1000
 
   def getadcreading(self, bus):
-    """Returns the voltage reading for this instance after calibration and conversion.
+    """Returns the voltage reading for this instance after calibration.
 
     Arguments:
     bus -- The quick2wire bus to use for communication with the ADC chip.

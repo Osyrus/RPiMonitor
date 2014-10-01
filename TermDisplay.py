@@ -8,9 +8,9 @@ import quick2wire.i2c as i2c
 
 try:
   #I2C Setup Stuff
-  ADCAdd =  (0x68, 0x69)
-  Ch16 = (0x98, 0xB8, 0xD8, 0xF8) #16bit Channels
-  Ch12 = (0x90, 0XB0, 0XD0, 0XF0) #12bit Channels
+  ADCAdd =  (0x68, 0x69) #For the two ADC chips
+  Ch16 = (0x98, 0xB8, 0xD8, 0xF8) #16bit SubChannels
+  Ch12 = (0x90, 0XB0, 0XD0, 0XF0) #12bit SubChannels
   Div16 = 16 #Divisor for 16bit readings
   Div12 = 1  #Divisor for 12bit readings
 
