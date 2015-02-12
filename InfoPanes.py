@@ -118,7 +118,7 @@ class InfoPane(VReader, Pane):
     #Create a user readable string with this data
     dataStr = self.createString(data)
     #Publish this data via mqtt
-    mqttC.publish("laser/monitor/" + self.idNum, time.time() + " " + dataStr, 0, retain=False)
+    mqttC.publish("laser/monitor/" + str(self.idNum), str(time.time()) + " " + dataStr, 0, retain=False)
     #Print this readable string to the pane
     self.win.addstr(0, 0, str(dataStr), curses.A_BOLD)
     #Refresh this pane for the user to read!
