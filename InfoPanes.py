@@ -1,5 +1,6 @@
 import quick2wire.i2c as i2c
 import curses
+import time
 
 class VReader:
   """The superclass dealing with communicating with the ADC and pulling readings.
@@ -97,11 +98,12 @@ class InfoPane(VReader, Pane):
   def applyCal(self, raw):
     return (self.LCal[0] * raw) + self.LCal[1]
 
-  def update(self, bus):
+  def update(self, bus, mqttC):
     """Updates the windows for this diode temperature window instance
 
     Arguments:
-    bus -- The quick2wire bus to use for communication with the ADC chip.
+    bus   -- The quick2wire bus to use for communication with the ADC chip.
+    mqttC -- The mqtt client for publishing data
     """
     #Pull the data from the ADC and deal with any averaging
     if self.avg == 1:
@@ -115,6 +117,8 @@ class InfoPane(VReader, Pane):
     data = self.applyCal(rawData)
     #Create a user readable string with this data
     dataStr = self.createString(data)
+    #Publish this data via mqtt
+    mqttC.publish("laser/monitor/" + self.idNum, time.time() + " " + dataStr, 0, retain=False)
     #Print this readable string to the pane
     self.win.addstr(0, 0, str(dataStr), curses.A_BOLD)
     #Refresh this pane for the user to read!

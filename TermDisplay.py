@@ -3,6 +3,7 @@ import InfoPanes
 from PaneManager import PaneManager
 import time
 import quick2wire.i2c as i2c
+import paho.mqtt.client as mqtt
 #from datetime import datetime
 #from flask import Flask
 
@@ -34,18 +35,23 @@ try:
   diodeInfo = ("Diode ", "temp", "deg")
   driverInfo = ("Driver ", "current", "A")
 
-  #Create some info panes
+  #Create some info panes, first number will be the mqtt topic id
   D1Pane = InfoPanes.InfoPane(1, diodeInfo, ADCAdd[0], Ch16[0], Div16, D1Cal)
   D2Pane = InfoPanes.InfoPane(2, diodeInfo, ADCAdd[0], Ch16[1], Div16, D2Cal)
-  DrPane = InfoPanes.InfoPane(1, driverInfo, ADCAdd[1], Ch12[0], Div12, CurrentCal, CurrentAvg)
+  DrPane = InfoPanes.InfoPane(3, driverInfo, ADCAdd[1], Ch12[0], Div12, CurrentCal, CurrentAvg)
 
   #Add them to the manager
   PM.addPanes([D1Pane, D2Pane, DrPane])
 
+  #Now add the new MQTT measurement publishing system
+  mqttC = mqtt.Client()
+  mqttC.connect("127.0.0.1", 1883, 60)
+  mqttC.loop_start();
+
   #Run the refresh loop
   with i2c.I2CMaster() as bus:
     while True:
-      PM.updateAll(bus)
+      PM.updateAll(bus, mqttC)
       
       c = stdscr.getch()
       if c == ord('q'):
@@ -62,4 +68,5 @@ finally:
   curses.echo()
   stdscr.keypad(0)
   curses.endwin()
-
+  mqttC.loop_stop()
+  mqttC.disconnect()

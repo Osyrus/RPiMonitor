@@ -37,6 +37,6 @@ class PaneManager:
     for pane in panes:
       self.addPane(pane)
 
-  def updateAll(self, bus):
+  def updateAll(self, bus, mqttC):
     for pane in self.panes:
-      pane.update(bus)
+      pane.update(bus, mqttC)
