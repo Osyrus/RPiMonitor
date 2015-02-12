@@ -37,6 +37,9 @@ class PaneManager:
     for pane in panes:
       self.addPane(pane)
 
-  def updateAll(self, bus, mqttC):
+  def updateAll(self, instr, mqttC):
     for pane in self.panes:
-      pane.update(bus, mqttC)
+      if pane.getInstrType() == "adc":
+        pane.update(instr[0], mqttC)
+      elif pane.getInstrType() == "ivi":
+        pane.update(instr[1], mqttC)

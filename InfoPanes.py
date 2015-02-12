@@ -42,11 +42,18 @@ class VReader:
 
 class Pane:
   """docstring for Pane"""
-  def __init__(self, x = 1, y = 1, w = 30, h = 1):
+  def __init__(self, idNum, info, instrType, LCal, x = 1, y = 1, w = 30, h = 1):
     self.x, self.y = 0, 0
     self.w, self.h = 0, 0
     self.setPos(x, y)
     self.setDim(w, h)
+    self.win = None
+    self.idNum = idNum
+    self.info = info
+    self.instrType = instrType
+    self.LCal = LCal
+
+    self.setWidthStr(info)
 
   def getPos(self):
     return (self.x, self.y)
@@ -60,9 +67,45 @@ class Pane:
   def setDim(self, w, h):
     self.w, self.h = w, h
 
+  def getInstrType(self):
+    return self.instrType
+
+  def applyCal(self, raw):
+    return (self.LCal[0] * raw) + self.LCal[1]
+
   def setWidthStr(self, inStr):
     self.w = len(inStr[0]) + len(inStr[1]) + len(inStr[2]) + 13
-    
+
+  def makeWin(self):
+    self.win = curses.newwin(self.h, self.w, self.y, self.x)
+
+  def createString(self, data):
+    return self.info[0] + "{} ".format(self.idNum) + self.info[1] + ": {0:02.02f} ".format(data) + self.info[2]
+
+  def mqttPublish(self, mqttC, topic, data):
+    mqttC.publish(topic + str(self.idNum), str(time.time()) + " " + str(data), 0, retain=False)
+
+class IVIPane(Pane):
+  """docstring for IVIPane"""
+  def __init__(self, idNum, info, readCommand, LCal = (1, 0)):
+    Pane.__init__(self, idNum, info, "ivi", LCal)
+
+    self.readCommand = readCommand
+
+  def update(self, iviInstr, mqttC):
+    #Read from the instument
+    dataRaw = iviInstr.ask(self.readCommand)
+    #The instument gives the number back as a string, need a number
+    data = self.applyCal(float(dataRaw))
+    #Then do the normal stuff...
+    dataStr = self.createString(data)
+
+    self.mqttPublish(mqttC, "laser/sensors/ivi/", data)
+
+    #self.win.addstr(0, 0, str(dataRaw), curses.A_BOLD)
+    self.win.addstr(0, 0, str(dataStr), curses.A_BOLD)
+
+    self.win.refresh()
 
 class InfoPane(VReader, Pane):
   """Subclass of VReader that creates a curses windows to read diode temperatures
@@ -80,45 +123,31 @@ class InfoPane(VReader, Pane):
   """
   def __init__(self, idNum, info, adc, ch, div, LCal = (1, 0), avg = 1):
     VReader.__init__(self, adc, ch, div)
-    Pane.__init__(self)
+    Pane.__init__(self, idNum, info, "adc", LCal)
 
-    self.idNum = idNum
-    self.info = info
-    self.win = None
-    self.LCal = LCal
     self.avg = avg
-    self.setWidthStr(info)
 
-  def makeWin(self):
-    self.win = curses.newwin(self.h, self.w, self.y, self.x)
-
-  def createString(self, data):
-    return self.info[0] + "{} ".format(self.idNum) + self.info[1] + ": {0:02.02f} ".format(data) + self.info[2]
-
-  def applyCal(self, raw):
-    return (self.LCal[0] * raw) + self.LCal[1]
-
-  def update(self, bus, mqttC):
+  def update(self, adcBus, mqttC):
     """Updates the windows for this diode temperature window instance
 
     Arguments:
-    bus   -- The quick2wire bus to use for communication with the ADC chip.
+    adcBus   -- The quick2wire bus to use for communication with the ADC chip.
     mqttC -- The mqtt client for publishing data
     """
     #Pull the data from the ADC and deal with any averaging
     if self.avg == 1:
-      rawData = self.getadcreading(bus)
+      rawData = self.getadcreading(adcBus)
     else:
       accum = 0  
       for i in range(1, self.avg + 1):
-        accum = accum + self.getadcreading(bus)
+        accum = accum + self.getadcreading(adcBus)
       rawData = accum / self.avg
     #Convert the output to the correct units
     data = self.applyCal(rawData)
     #Create a user readable string with this data
     dataStr = self.createString(data)
     #Publish this data via mqtt
-    mqttC.publish("laser/monitor/" + str(self.idNum), str(time.time()) + " " + dataStr, 0, retain=False)
+    self.mqttPublish(mqttC, "laser/sensors/adc/", data)
     #Print this readable string to the pane
     self.win.addstr(0, 0, str(dataStr), curses.A_BOLD)
     #Refresh this pane for the user to read!
