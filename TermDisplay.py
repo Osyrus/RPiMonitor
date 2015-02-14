@@ -17,9 +17,14 @@ try:
   Div12 = 1  #Divisor for 12bit readings
 
   #IVI Instruments Setup Stuff
-  PM100D = usbtmc.Instrument("USB::0x1313::0x8078::P0004516::INSTR")
-  PM100DRead = "READ?"
-  PM100DCal = (1000, 0)
+  try:
+  	PM100D = usbtmc.Instrument("USB::0x1313::0x8078::P0004516::INSTR")
+  	PM100DRead = "READ?"
+  	PM100DCal = (1000, 0)
+  	PM100DConnected = 1
+  except:
+  	PM100D = 0;
+  	PM100DConnected = 0
 
   #Calibration Stuff
   D1Cal = (10.506, -2.351)
@@ -46,10 +51,14 @@ try:
   D1Pane = InfoPanes.InfoPane(1, diodeInfo, ADCAdd[0], Ch16[0], Div16, D1Cal)
   D2Pane = InfoPanes.InfoPane(2, diodeInfo, ADCAdd[0], Ch16[1], Div16, D2Cal)
   DrPane = InfoPanes.InfoPane(3, driverInfo, ADCAdd[1], Ch12[0], Div12, CurrentCal, CurrentAvg)
-  PMPane = InfoPanes.IVIPane(1, PM100DInfo, PM100DRead, PM100DCal)
 
   #Add them to the manager
-  PM.addPanes([D1Pane, D2Pane, DrPane, PMPane])
+  PM.addPanes([D1Pane, D2Pane, DrPane])
+
+  #Add the PM100D pane if it is plugged in
+  if PM100DConnected == 1:
+  	PMPane = InfoPanes.IVIPane(1, PM100DInfo, PM100DRead, PM100DCal)
+  	PM.addPane(PMPane)
 
   #Now add the new MQTT measurement publishing system
   mqttC = mqtt.Client()

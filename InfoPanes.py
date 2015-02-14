@@ -93,12 +93,16 @@ class IVIPane(Pane):
     self.readCommand = readCommand
 
   def update(self, iviInstr, mqttC):
-    #Read from the instument
-    dataRaw = iviInstr.ask(self.readCommand)
-    #The instument gives the number back as a string, need a number
-    data = self.applyCal(float(dataRaw))
-    #Then do the normal stuff...
-    dataStr = self.createString(data)
+    try:
+      #Read from the instument
+      dataRaw = iviInstr.ask(self.readCommand)
+      #The instument gives the number back as a string, need a number
+      data = self.applyCal(float(dataRaw))
+      #Then do the normal stuff...
+      dataStr = self.createString(data)
+    except:
+      data = -1
+      dataStr = "IVI Read Error"
 
     self.mqttPublish(mqttC, "laser/sensors/ivi/", data)
 
